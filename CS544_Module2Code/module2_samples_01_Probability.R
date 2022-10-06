@@ -32,11 +32,9 @@ urnsamples(c("r","g","b"), size = 2)
 
 # Ordered Sampling without Replacement: Permutations
 
-urnsamples(1:3, size = 2, 
-           replace = FALSE, ordered = TRUE)
+urnsamples(1:3, size = 2, replace = FALSE, ordered = TRUE)
 
-urnsamples(c("r","g","b"), size = 2, 
-           replace = FALSE, ordered = TRUE)
+urnsamples(c("r","g","b"), size = 2, replace = FALSE, ordered = TRUE)
 
 
 # Ordered Sampling with Replacement  (n^k)

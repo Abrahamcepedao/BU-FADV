@@ -314,7 +314,7 @@ my.reverse(20:30)
 
 my.reverse <- function (x) {
   x[length(x):1]
-}
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 
 my.reverse(c(10, 50, 100))
 
