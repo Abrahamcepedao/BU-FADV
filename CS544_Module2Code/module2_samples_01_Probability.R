@@ -8,6 +8,7 @@
 library(prob)
 
 
+
 tosscoin(1)
 
 tosscoin(2)
@@ -190,7 +191,7 @@ tail(S, n = 2)
 
 A <- subset(S, X1 == X2)
 A
-Prob(A)
+prob(A)
 
 
 B <- subset(S, X1 + X2 == 8)
