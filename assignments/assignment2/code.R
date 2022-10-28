@@ -1,139 +1,69 @@
-#Problem 1 - Probability
+#1. Read data
+data <- read.csv("data.csv", header = TRUE)
+attach(data)
 
-total <- 10000
-group1 <- 4250 
-group2 <- 2850
-group3 <- 1640
-group4 <- total - group1 - group2 - group3
-bmi1 <- 1062
-bmi2 <- 1710
-bmi3 <- 656
-bmi4 <- 189
-print(group4)
-#1.1 
-tot_bmi <- bmi1 + bmi2 + bmi3 + bmi4
-print(prob1 <- tot_bmi / total * 100)
+#2. Scatterplot
+# Scatter plot using ggplot
+require(ggplot2)
+ggplot(data, aes(x=meals,y=mercury)) + 
+  geom_point(shape=1,color="red") + xlab("Number of meals with fish") +
+  ylab("Total Mercury (mg/g)") + xlim(c(0,max(meals))) + ylim(c(0,max(mercury))) + 
+  ggtitle("Scatterplot of number of meals with fish and the total mercury") + theme_bw(base_size=14) 
 
-#1.2
-print(prob2 <- bmi1 / tot_bmi * 100)
+#3. Correlation coefficient
+cor(meals, mercury)
 
-#1.3
-print(prob3 <- bmi2 / tot_bmi * 100)
+#4. Least squares regression
+my.model<-lm(data$mercury~data$meals)
+#abline(my.model)
 
-#1.3
-print(prob3 <- bmi3 / tot_bmi * 100)
+ggplot(data, aes(x=meals,y=mercury)) + geom_point(shape=1,color="red") +
+  xlab("Number of meals with fish") + 
+  ylab("Total Mercury (mg/g)") + xlim(c(0,max(meals))) + ylim(c(0,max(mercury))) + 
+  ggtitle("Scatterplot of number of meals with fish and the total mercury") + theme_bw(base_size=14) + 
+  geom_abline(slope = my.model$coefficients[2],intercept=my.model$coefficients[1])
 
-#1.4
-print(prob3 <- bmi4 / tot_bmi * 100)
+#5. B1 & B0
+sprintf("β_0 %.3f", my.model$coefficients[1])
+sprintf("β_1 %.3f", my.model$coefficients[2])
 
+#6. Test hypothesis
+#6.1 - Hypothesis
+#H0 ∶ β1 = 0 (there is no linear association) 
+#H1 ∶ β1 ≠ 0 (there is a linear association)
+#α = 0.05
 
-#Problem 2 - Random Variables
-library(prob)
+#6.2 - Test statistic
+#F-test
+#df1 = 1
+#df2 = 100-2 = 98
 
-S <- rolldie(3, makespace = TRUE)
+#6.3 - Decision rule
+qf(.90, df1=1, df2=98)
+#Decision Rule: Reject H0 if F ≥ 2.75743 Otherwise, do not reject H0
 
-#2.1
-subset(S, X1 + X2 + X3 >= 6 & X1 + X2 + X3 < 10)
-prob(S, X1 + X2 + X3 >= 6 & X1 + X2 + X3 < 10)
+#6.4 - Compute the test statistic
+anova(my.model)
+summary(my.model)
+#Reject H0 since 93.689 ≥ 4.183.
+#We have significant evidence at the α = 0.10 level that β1 ≠ 0.
+#There is evidence of a significant linear association between study time and
+#exam score (here, p < 0.001 as calculated using software program).
 
-#2.2
-subset(S, X1 == X2 & X3 == X2)
-prob(S, X1 == X2 & X3 == X2)
+#R^2 value = 0.4888
 
-#2.3
-subset(S, (X1 == X2 && X2 != X3) | (X1 == X3 & X3 != X2) | (X2 == X3 & X2 != X1))
-prob(S, (X1 == X2 && X2 != X3) | (X1 == X3 & X3 != X2) | (X2 == X3 & X2 != X1))
+library(Metrics)
 
-#2.4
-subset(S, X1 != X2 & X1 != X3 & X2 != X3)
-prob(S, X1 != X2 & X1 != X3 & X2 != X3)
+pred <- predict(my.model, data.frame(mercury = data$mercury))
 
-#2.5
-subset(S, (X1 + X2 + X3) > 9 & ((X1 == X2 && X2 != X3) | (X1 == X3 & X3 != X2) | (X2 == X3 & X2 != X1)))
-prob(S, ((X1 == X2 && X2 != X3) | (X1 == X3 & X3 != X2) | (X2 == X3 & X2 != X1)), given = (X1 + X2 + X3) > 9)
-
-
-#Problem 3 - Functions
-
-#3.1
-sum_of_first_N_odd_squares <- function(n) {
-  sum <- 0
-  for (i in c(seq(1,n*2,2))) {
-    sum <- sum + i^2
-  }
-  return(sum)
-}
-
-sum_of_first_N_odd_squares(2)
-sum_of_first_N_odd_squares(5)
-sum_of_first_N_odd_squares(10)
-
-#3.2
-sum_of_first_N_odd_squares_V2 <- function(n) {
-  return (sum(c(seq(1,n*2,2))^2))
-}
-
-sum_of_first_N_odd_squares_V2(2)
-sum_of_first_N_odd_squares_V2(5)
-sum_of_first_N_odd_squares_V2(10)
+rmse(data$mercury, predict(my.model, data.frame(mercury = data$mercury)))
+summary(my.model)$r.squared 
 
 
-#Problem 4 - R
-data <- read.csv("DJI_2020.csv", header = TRUE)
-print(data)
 
-#4.1
-sm <- summary(data$Close)
-names(sm) <- c("Min", "Q1", "Median", "Mean", "Q3", "Max")
-print(sm)
 
-#4.2
-min <- min(data$Close)
-index <- which(data$Close == min(data$Close))
-sprintf("The minimum Dow value %.0f is at row %.0f on %s", min, index, data$Date[index])
 
-#4.3
-val <- data$Close[index]
-data$Date <- as.character(data$Date)
-min_date <- data$Date[index]
-subs <- subset(data, Date > min_date)
 
-if(substring(min_date, 4, 4) == "/"){
-  day <- substring(min_date, 3, 3)
-} else {
-  day <- substring(min_date, 3, 4)
-}
-print(day)
-month <- substring(min_date, 1,1)
 
-for (i in 1:length(subs$Date)-1) {
-  print(subs$Date[i])
-  print("111")
-  if(substring(subs$Date[i], 4, 4) == "/" & month == substring(subs$Date[i], 1, 1)){
-    print("---")
-    day2 <- substring(subs$Date[i], 3, 3)
-    if(as.integer(day2) < as.integer(day)){
-      subs <- subs[subs$Date != subs$Date[i],]
-    }
-  } else if(month == substring(subs$Date[i], 1, 1)) {
-    print("---")
-    day2 <- substring(subs$Date[i], 3, 4)
-    if(as.integer(day2) < as.integer(day)){
-      subs <- subs[subs$Date != subs$Date[i],]
-    }
-  }
-}
-
-for (i in 1:length(data$Date)) {
-  n1 <- as.character(data$Date[i])
-  #print("hola")
-  if(substring(as.character(data$Date[i]), 4,4) != "/"){
-    day <- substring(as.character(data$Date[i]), 3,4)
-    month <- substring(as.character(data$Date[i]), 1,1)
-    val_date <- paste(day, "/", month, "/20", sep = "")
-    #print(val_date)
-    data$Date[i] <- as.Date(val_date)
-  }
-}
 
 

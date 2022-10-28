@@ -204,7 +204,7 @@ Prob(B, given = A)
 
 
 S <- rolldie(2, makespace = TRUE)
-prob(S, X1 == X2, given = (X1 + X2 == 8))
+Prob(S, X1 == X2, given = (X1 + X2 == 8))
 Prob(S, X1 + X2 == 8, given = (X1 == X2))
 
 #### 3.3. Conditional Probability Example – Coin Toss Twice
