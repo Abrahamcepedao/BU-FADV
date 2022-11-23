@@ -78,3 +78,13 @@ write.table(athlete.info, file="test.txt",
 
 write.csv(athlete.info, file="test.csv", 
           row.names = FALSE, quote = FALSE)
+
+
+
+set.seed(123)
+hist(rexp(10000),breaks = 35, freq=F)
+curve(dexp,0,8,add=T)
+
+set.seed(123)
+hist(rexp(1000),breaks = 27, freq=F)
+curve(dexp,0,8,add=T)
