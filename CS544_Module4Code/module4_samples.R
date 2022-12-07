@@ -329,7 +329,7 @@ plot(table(x))
 #### 2.15. Negative Binomial Distribution
 
 r <- 3  # Number of successes (fixed)
-p <- 0.5
+p <- 0.6
 
 # P(X = 5)   five failures before getting 3 successes
 # 2 successes in the first 7 attempts, 8th is success
@@ -340,11 +340,11 @@ dnbinom(5, size = r, prob = p)
 
 # Distribution of probabilities
 
-pmf <- dnbinom(0:20, size = r, prob = p)
+pmf <- dnbinom(0:10, size = r, prob = p)
 pmf
 
 #Plot PMF
-plot(0:20,pmf,type="h",
+plot(0:10,pmf,type="h",
   xlab="x",ylab="PMF", ylim = c(0, 0.2))
 abline(h=0, col="red")
 
