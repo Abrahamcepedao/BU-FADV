@@ -252,7 +252,7 @@ sequence <- c()
 for(i in 1:n){
   sequence <- c(sequence, show_fibonacci(i))
 }
-sprintf("First %i Fibonacci numbers: %s",n , paste(sequence, collapse = ", "))
+sprintf("First %i Fibonacci numbers: %s", n , paste(sequence, collapse = ", "))
 
 #factors
 show_factors <- function(n) {
